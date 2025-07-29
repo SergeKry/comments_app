@@ -1,5 +1,6 @@
 import { useRequireAuth } from '../hooks/useAuth'
 import { useEffect, useState } from 'react'
+import {Box} from '@mui/material'
 
 export default function Home() {
   const token = useRequireAuth()
@@ -15,10 +16,10 @@ export default function Home() {
 
   if (!me) return <div>Loading…</div>
   return (
-    <div>
+    <Box>
       <h1>Welcome, {me.username}!</h1>
       <p>Email: {me.email}</p>
       <p>Homepage: <a href={me.homepage}>{me.homepage}</a></p>
-    </div>
+    </Box>
   )
 }

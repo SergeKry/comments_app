@@ -46,85 +46,83 @@ export default function Register() {
   }
 
   return (
-    <Container maxWidth="xs">
-      <Box mt={8} p={4} boxShadow={3}>
-        <Typography variant="h5" align="center" gutterBottom>
-          Register
-        </Typography>
+    <Box mt={8} p={4} boxShadow={3}>
+    <Typography variant="h5" align="center" gutterBottom>
+        Register
+    </Typography>
 
-        {error && <Typography color="error">{error}</Typography>}
+    {error && <Typography color="error">{error}</Typography>}
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            name="username"
-            label="Username"
-            fullWidth
-            margin="normal"
-            value={form.username}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            name="email"
-            label="Email"
-            type="email"
-            fullWidth
-            margin="normal"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            name="homepage"
-            label="Homepage"
-            type="text"
-            fullWidth
-            margin="normal"
-            value={form.homepage}
-            onChange={handleChange}
-            onBlur={handleHomepageBlur}
-          />
-          <TextField
-            name="password"
-            label="Password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            name="repeatPassword"
-            label="Repeat Password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={form.repeatPassword}
-            onChange={handleChange}
-            required
-            error={Boolean(error && form.password !== form.repeatPassword)}
-            helperText={
-              form.repeatPassword && form.password !== form.repeatPassword
-                ? 'Passwords must match'
-                : ''
-            }
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mt: 2 }}
-          >
-            Sign Up
-          </Button>
-        </form>
+    <form onSubmit={handleSubmit}>
+        <TextField
+        name="username"
+        label="Username"
+        fullWidth
+        margin="normal"
+        value={form.username}
+        onChange={handleChange}
+        required
+        />
+        <TextField
+        name="email"
+        label="Email"
+        type="email"
+        fullWidth
+        margin="normal"
+        value={form.email}
+        onChange={handleChange}
+        required
+        />
+        <TextField
+        name="homepage"
+        label="Homepage"
+        type="text"
+        fullWidth
+        margin="normal"
+        value={form.homepage}
+        onChange={handleChange}
+        onBlur={handleHomepageBlur}
+        />
+        <TextField
+        name="password"
+        label="Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={form.password}
+        onChange={handleChange}
+        required
+        />
+        <TextField
+        name="repeatPassword"
+        label="Repeat Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={form.repeatPassword}
+        onChange={handleChange}
+        required
+        error={Boolean(error && form.password !== form.repeatPassword)}
+        helperText={
+            form.repeatPassword && form.password !== form.repeatPassword
+            ? 'Passwords must match'
+            : ''
+        }
+        />
+        <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        fullWidth
+        sx={{ mt: 2 }}
+        >
+        Sign Up
+        </Button>
+    </form>
 
-        <Box mt={2} textAlign="center">
-          <Link to="/login">Already have an account? Log in</Link>
-        </Box>
-      </Box>
-    </Container>
+    <Box mt={2} textAlign="center">
+        <Link to="/login">Already have an account? Log in</Link>
+    </Box>
+    </Box>
   )
 }

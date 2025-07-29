@@ -25,49 +25,47 @@ export default function Login() {
   }
 
   return (
-    <Container maxWidth="xs">
-      <Box mt={8} p={4} boxShadow={3}>
-        <Typography variant="h5" align="center" gutterBottom>
-          Sign In
-        </Typography>
+        <Box mt={8} p={4} boxShadow={3}>
+    <Typography variant="h5" align="center" gutterBottom>
+        Sign In
+    </Typography>
 
-        {error && <Typography color="error">{error}</Typography>}
+    {error && <Typography color="error">{error}</Typography>}
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            name="username"
-            label="Username"
-            fullWidth
-            margin="normal"
-            value={form.username}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            name="password"
-            label="Password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mt: 2 }}
-          >
-            Log In
-          </Button>
-        </form>
+    <form onSubmit={handleSubmit}>
+        <TextField
+        name="username"
+        label="Username"
+        fullWidth
+        margin="normal"
+        value={form.username}
+        onChange={handleChange}
+        required
+        />
+        <TextField
+        name="password"
+        label="Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={form.password}
+        onChange={handleChange}
+        required
+        />
+        <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        fullWidth
+        sx={{ mt: 2 }}
+        >
+        Log In
+        </Button>
+    </form>
 
-        <Box mt={2} textAlign="center">
-          <Link to="/register">Create an account</Link>
-        </Box>
-      </Box>
-    </Container>
+    <Box mt={2} textAlign="center">
+        <Link to="/register">Create an account</Link>
+    </Box>
+    </Box>
   )
 }
