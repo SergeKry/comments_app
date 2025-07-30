@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline     from '@mui/material/CssBaseline'
+import { AuthProvider } from './contexts/AuthContext.jsx'
 
 const theme = createTheme({
   palette: {
@@ -19,9 +20,11 @@ const theme = createTheme({
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline /> 
-      <App />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline /> 
+        <App />
+      </ThemeProvider>
+    </AuthProvider>
   </StrictMode>
 )

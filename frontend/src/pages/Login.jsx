@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { TextField, Button, Container, Typography, Box } from '@mui/material'
-import { login } from '../api/auth'
+import { login as apiLogin } from '../api/auth'
+import { useAuth } from '../contexts/AuthContext'
 import { useNavigate, Link } from 'react-router-dom'
 
 export default function Login() {
   const navigate = useNavigate()
   const [form, setForm] = useState({ username: '', password: '' })
   const [error, setError] = useState('')
+  const { login } = useAuth()
 
   const handleChange = (e) => {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
@@ -15,9 +17,8 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const { access, refresh } = await login(form)
-      localStorage.setItem('token', access)
-      localStorage.setItem('refresh', refresh)
+      const { access, refresh } = await apiLogin(form)
+      login({ access, refresh })
       navigate('/')
     } catch (err) {
       setError(err.message)
