@@ -46,7 +46,16 @@ export default function Register() {
   }
 
   return (
-    <Box mt={8} p={4} boxShadow={3}>
+    <Box
+        sx={{
+            maxWidth: 400,
+            height: 'auto',
+            mx: 'auto',
+            p: 4,
+            boxShadow: 3,
+            bgcolor: 'background.paper',
+            }}
+    >
     <Typography variant="h5" align="center" gutterBottom>
         Register
     </Typography>

@@ -1,15 +1,23 @@
-import React from 'react'
 import { AppBar, Toolbar, Typography, Button, Box, Container } from '@mui/material'
+import NavBar from './NavBar'
 
 export default function MasterLayout({ children }) {
-  const isAuthenticated = Boolean(localStorage.getItem('token'))
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
-      <AppBar position="static">
-        <Toolbar>Logo</Toolbar>
-      </AppBar>
-      <Container sx={{ flexGrow: 1 }}>{children}</Container>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw' }}>
+      <NavBar />
+      <Box 
+        component="main" 
+        sx={{
+            flexGrow: 1,
+            p: 2,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+        }}
+      >
+        {children}
+      </Box>
     </Box>
   )
 }

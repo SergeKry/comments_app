@@ -25,10 +25,19 @@ export default function Login() {
   }
 
   return (
-        <Box mt={8} p={4} boxShadow={3}>
-    <Typography variant="h5" align="center" gutterBottom>
-        Sign In
-    </Typography>
+    <Box 
+    sx={{
+        maxWidth: 400,
+        height: 'auto',
+        mx: 'auto',
+        p: 4,
+        boxShadow: 3,
+        bgcolor: 'background.paper',
+        }}
+    >
+        <Typography variant="h5" align="center" gutterBottom>
+            Sign In
+        </Typography>
 
     {error && <Typography color="error">{error}</Typography>}
 
