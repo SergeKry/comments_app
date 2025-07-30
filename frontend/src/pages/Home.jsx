@@ -41,7 +41,7 @@ export default function Home() {
   }, [page])
 
    return (
-    <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', width: '90%', height: '100%' }}>
       {/* Create Post button for logged-in users */}
       {user && (
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
@@ -61,7 +61,7 @@ export default function Home() {
           <CircularProgress />
         </Box>
       ) : posts.length > 0 ? (
-        posts.map((post) => <PostCard key={post.id} post={post} />)
+        posts.map((post) => <PostCard key={post.id} post={post} hoverable/>)
       ) : (
         <Typography align="center" sx={{ mt: 4 }}>
           No posts found.
