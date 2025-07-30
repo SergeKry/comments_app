@@ -7,7 +7,7 @@ export async function login({ username, password }) {
     body: JSON.stringify({ username, password }),
   })
   if (!resp.ok) throw new Error('Login failed')
-  return resp.json()   // returns { access, refresh }
+  return resp.json()
 }
 
 export async function register({ username, email, homepage, password }) {
@@ -18,4 +18,25 @@ export async function register({ username, email, homepage, password }) {
   })
   if (!resp.ok) throw new Error('Registration failed')
   return resp.json()
+}
+
+export async function logoutAPI() {
+  const access  = localStorage.getItem('token')
+  const refresh = localStorage.getItem('refresh')
+  if (!refresh) return
+
+  const resp = await fetch(`${API}/auth/logout/`, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access}`,
+     },
+    body: JSON.stringify({ refresh }),
+    // if your logout endpoint is cookie‑based, add credentials:
+    // credentials: 'include',
+  })
+
+  if (!resp.ok) {
+    throw new Error('Server logout failed')
+  }
 }

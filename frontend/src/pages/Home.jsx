@@ -1,4 +1,4 @@
-import { useRequireAuth } from '../hooks/useAuth'
+import {useRequireAuth} from '../hooks/useAuth'
 import { useEffect, useState } from 'react'
 import {Box} from '@mui/material'
 
