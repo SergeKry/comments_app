@@ -1,21 +1,15 @@
-const API = import.meta.env.VITE_API_URL;
-
-// Helper to get stored access token
-function getAuthHeader() {
-  const token = localStorage.getItem('token');
-  return token ? { 'Authorization': `Bearer ${token}` } : {};
-}
+import client from './client'
 
 // Build query string from params object
 function buildQuery(params = {}) {
-  const qs = new URLSearchParams();
+  const qs = new URLSearchParams()
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
-      qs.append(key, value);
+      qs.append(key, value)
     }
-  });
-  const str = qs.toString();
-  return str ? `?${str}` : '';
+  })
+  const str = qs.toString()
+  return str ? `?${str}` : ''
 }
 
 /**
@@ -28,18 +22,14 @@ function buildQuery(params = {}) {
  * @param {string} options.email       - filter by email
  * @returns {Promise<Object>}          - DRF paginated response
  */
-export async function fetchPosts({ page, page_size, ordering, username, email } = {}) {
-  const query = buildQuery({ page, page_size, ordering, username, email });
-  const resp = await fetch(`${API}/posts/${query}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeader(),
-    },
-  });
-  if (!resp.ok) {
-    throw new Error('Failed to fetch posts');
+export async function fetchPosts(options = {}) {
+  const query = buildQuery(options)
+  const response = await client(`/posts/${query}`)
+  if (!response.ok) {
+    const errText = await response.text()
+    throw new Error(`Failed to fetch posts: ${errText}`)
   }
-  return resp.json();
+  return response.json()
 }
 
 /**
@@ -48,14 +38,12 @@ export async function fetchPosts({ page, page_size, ordering, username, email } 
  * @returns {Promise<Object>}
  */
 export async function fetchPost(id) {
-  const resp = await fetch(`${API}/posts/${id}/`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeader(),
-    },
-  });
-  if (!resp.ok) throw new Error(`Failed to fetch post ${id}`);
-  return resp.json();
+  const response = await client(`/posts/${id}/`)
+  if (!response.ok) {
+    const errText = await response.text()
+    throw new Error(`Failed to fetch post ${id}: ${errText}`)
+  }
+  return response.json()
 }
 
 /**
@@ -66,16 +54,15 @@ export async function fetchPost(id) {
  * @returns {Promise<Object>}
  */
 export async function createPost(data) {
-  const resp = await fetch(`${API}/posts/`, {
+  const response = await client('/posts/', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeader(),
-    },
     body: JSON.stringify(data),
-  });
-  if (!resp.ok) throw new Error('Failed to create post');
-  return resp.json();
+  })
+  if (!response.ok) {
+    const errText = await response.text()
+    throw new Error(`Failed to create post: ${errText}`)
+  }
+  return response.json()
 }
 
 /**
@@ -85,16 +72,15 @@ export async function createPost(data) {
  * @returns {Promise<Object>}
  */
 export async function updatePost(id, data) {
-  const resp = await fetch(`${API}/posts/${id}/`, {
+  const response = await client(`/posts/${id}/`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeader(),
-    },
     body: JSON.stringify(data),
-  });
-  if (!resp.ok) throw new Error(`Failed to update post ${id}`);
-  return resp.json();
+  })
+  if (!response.ok) {
+    const errText = await response.text()
+    throw new Error(`Failed to update post ${id}: ${errText}`)
+  }
+  return response.json()
 }
 
 /**
@@ -103,11 +89,11 @@ export async function updatePost(id, data) {
  * @returns {Promise<void>}
  */
 export async function deletePost(id) {
-  const resp = await fetch(`${API}/posts/${id}/`, {
+  const response = await client(`/posts/${id}/`, {
     method: 'DELETE',
-    headers: {
-      ...getAuthHeader(),
-    },
-  });
-  if (!resp.ok) throw new Error(`Failed to delete post ${id}`);
+  })
+  if (!response.ok) {
+    const errText = await response.text()
+    throw new Error(`Failed to delete post ${id}: ${errText}`)
+  }
 }

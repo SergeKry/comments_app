@@ -20,7 +20,7 @@ export default function PostCard({ post }) {
         title={username}
         subheader={`${email} • ${formattedDate}`}
         sx={{
-          bgcolor: 'grey.300',
+          bgcolor: '#CBC3E3',
         }}
       />
       <CardContent>
