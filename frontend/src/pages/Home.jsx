@@ -1,25 +1,74 @@
-import {useRequireAuth} from '../hooks/useAuth'
-import { useEffect, useState } from 'react'
-import {Box} from '@mui/material'
+import React, { useState, useEffect } from 'react'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
+import Typography from '@mui/material/Typography'
+import { fetchPosts } from '../api/posts'
+import PostCard from '../components/PostCard'
 
 export default function Home() {
-  const token = useRequireAuth()
-  const [me, setMe] = useState(null)
+  const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [page, setPage] = useState(1)
+  const [next, setNext] = useState(null)
+  const [previous, setPrevious] = useState(null)
+
+  const pageSize = 25
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/auth/me/', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => res.json())
-      .then(setMe)
-  }, [token])
+    let isMounted = true
+    async function loadPosts() {
+      setLoading(true)
+      try {
+        const data = await fetchPosts({ page, page_size: pageSize })
+        if (!isMounted) return
+        setPosts(data.results)
+        setNext(data.next)
+        setPrevious(data.previous)
+      } catch (err) {
+        console.error('Error fetching posts:', err)
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+    loadPosts()
+    return () => {
+      isMounted = false
+    }
+  }, [page])
 
-  if (!me) return <div>Loading…</div>
   return (
-    <Box>
-      <h1>Welcome, {me.username}!</h1>
-      <p>Email: {me.email}</p>
-      <p>Homepage: <a href={me.homepage}>{me.homepage}</a></p>
+    <Box sx={{ p: 2, justifyContent: 'flex-start' }}>
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <CircularProgress />
+        </Box>
+      ) : posts.length > 0 ? (
+        posts.map((post) => <PostCard key={post.id} post={post} />)
+      ) : (
+        <Typography align="center" sx={{ mt: 4 }}>
+          No posts found.
+        </Typography>
+      )}
+
+      {/* Pagination Controls */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4, gap: 2 }}>
+        <Button
+          variant="contained"
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={!previous}
+        >
+          Previous
+        </Button>
+        <Typography variant="body1">Page {page}</Typography>
+        <Button
+          variant="contained"
+          onClick={() => setPage((prev) => prev + 1)}
+          disabled={!next}
+        >
+          Next
+        </Button>
+      </Box>
     </Box>
   )
 }

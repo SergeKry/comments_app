@@ -1,10 +1,10 @@
-import { AppBar, Toolbar, Typography, Button, Box, Container } from '@mui/material'
+import { Box } from '@mui/material'
 import NavBar from './NavBar'
 
 export default function MasterLayout({ children }) {
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'start', height: '100vh', width: '100vw' }}>
       <NavBar />
       <Box 
         component="main" 
