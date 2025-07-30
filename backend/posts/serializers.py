@@ -5,9 +5,11 @@ from rest_framework.exceptions import ValidationError
 
 class PostSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source='user.username')
+    email = serializers.ReadOnlyField(source='user.email')
+
     class Meta:
         model = Post
-        fields = ['id', 'user', 'username', 'title', 'text', 'created_at', 'updated_at']
+        fields = ['id', 'user', 'username', 'email', 'title', 'text', 'created_at', 'updated_at']
         read_only_fields = ['id', 'user', 'created_at', 'updated_at']
 
     def validate_text(self, value):
