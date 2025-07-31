@@ -108,7 +108,11 @@ export default function Home() {
         }}
       >
         {/* Filters */}
-        <Box sx={{ display: "flex", gap: 2 }}>
+        <Box 
+          component="form"
+          autoComplete="off"
+          sx={{ display: "flex", gap: 2 }}
+        >
           <Autocomplete
             sx={{ width: 200 }}
             options={authors}
@@ -145,6 +149,8 @@ export default function Home() {
                 label="Filter by email"
                 size="small"
                 variant="outlined"
+                autoComplete="off"
+                name="filter-email"
               />
             )}
           />

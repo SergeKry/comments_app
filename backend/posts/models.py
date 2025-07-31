@@ -8,7 +8,7 @@ class Post(models.Model):
         related_name='posts'
     )
     title = models.CharField(max_length=255)
-    text = models.TextField()
+    text = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -34,7 +34,7 @@ class Reply(models.Model):
         on_delete=models.CASCADE,
         related_name='children'
     )
-    text = models.TextField()
+    text = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
