@@ -13,7 +13,11 @@ from attachments.models import Attachment, MAX_FILES_PER_OBJ
 
 
 class BaseAttachmentMixin:
-    parser_classes = [parsers.MultiPartParser, parsers.FormParser]
+    parser_classes = [
+        parsers.JSONParser,
+        parsers.MultiPartParser,
+        parsers.FormParser
+        ]
 
     def handle_attachments(self, obj):
         files = self.request.FILES.getlist('attachments')
