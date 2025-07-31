@@ -29,14 +29,6 @@ load_dotenv(dotenv_path=ENV_PATH)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-yw_evf(lez_+@54af#m=0f9fiel556ac)9!#tertw76gny4++!"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -153,6 +145,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS settings
+CORS_ORIGIN_ALLOW_ALL = os.getenv('CORS_ORIGIN_ALLOW_ALL', 'false').lower() in ('true', '1', 'yes')
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS','').split(',')
 
 # Authentication model
