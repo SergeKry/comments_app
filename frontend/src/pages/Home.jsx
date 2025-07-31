@@ -1,50 +1,151 @@
-import React, { useState, useEffect } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
-import Typography from '@mui/material/Typography'
-import { useAuth } from '../contexts/AuthContext'
-import { fetchPosts } from '../api/posts'
-import PostCard from '../components/PostCard'
+import { useState, useEffect } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import TextField from '@mui/material/TextField'
+import Typography from "@mui/material/Typography";
+import { useAuth } from "../contexts/AuthContext";
+import { fetchPosts } from "../api/posts";
+import { fetchAuthors } from "../api/auth";
+import PostCard from "../components/PostCard";
 
 export default function Home() {
-  const { user } = useAuth()
-  const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [page, setPage] = useState(1)
-  const [next, setNext] = useState(null)
-  const [previous, setPrevious] = useState(null)
+  const { user } = useAuth();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [next, setNext] = useState(null);
+  const [previous, setPrevious] = useState(null);
 
-  const pageSize = 25
+  const pageSize = 25;
+
+  const [authors, setAuthors] = useState([]);
+  const [authorsLoading, setAuthorsLoading] = useState(false);
+
+  const [selectedAuthor, setSelectedAuthor] = useState(null);
+  const [selectedEmail, setSelectedEmail] = useState(null);
 
   useEffect(() => {
-    let isMounted = true
-    async function loadPosts() {
-      setLoading(true)
-      try {
-        const data = await fetchPosts({ page, page_size: pageSize })
-        if (!isMounted) return
-        setPosts(data.results)
-        setNext(data.next)
-        setPrevious(data.previous)
-      } catch (err) {
-        console.error('Error fetching posts:', err)
-      } finally {
-        if (isMounted) setLoading(false)
-      }
-    }
-    loadPosts()
+    let active = true;
+    setAuthorsLoading(true);
+    fetchAuthors()
+      .then((data) => {
+        if (active) setAuthors(data);
+      })
+      .catch((err) => console.error("Error fetching authors:", err))
+      .finally(() => active && setAuthorsLoading(false));
     return () => {
-      isMounted = false
-    }
-  }, [page])
+      active = false;
+    };
+  }, []);
 
-   return (
-    <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', width: '90%', height: '100%' }}>
-      {/* Create Post button for logged-in users */}
-      {user && (
-        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+
+    // build filter options
+    const opts = {
+      page,
+      page_size: pageSize,
+      ordering: "-created_at",
+      ...(selectedAuthor && { username: selectedAuthor.username }),
+      ...(selectedEmail && { email: selectedEmail.email }),
+    };
+
+    fetchPosts(opts)
+      .then((data) => {
+        if (!active) return;
+        setPosts(data.results);
+        setNext(data.next);
+        setPrevious(data.previous);
+      })
+      .catch((err) => console.error("Error fetching posts:", err))
+      .finally(() => active && setLoading(false));
+
+    return () => {
+      active = false;
+    };
+  }, [page, selectedAuthor, selectedEmail]);
+
+  return (
+    <Box
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        width: "90%",
+        height: "100%",
+      }}
+    >
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{
+          alignSelf: "flex-start",
+        }}
+      >
+        New topics
+      </Typography>
+
+      {/* Filter row + Create button */}
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 2,
+        }}
+      >
+        {/* Filters */}
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Autocomplete
+            sx={{ width: 200 }}
+            options={authors}
+            getOptionLabel={(opt) => opt.username}
+            value={selectedAuthor}
+            onChange={(e, v) => {
+              setPage(1);
+              setSelectedAuthor(v);
+            }}
+            loading={authorsLoading}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Filter by author"
+                size="small"
+                variant="outlined"
+              />
+            )}
+          />
+
+          <Autocomplete
+            sx={{ width: 200 }}
+            options={authors}
+            getOptionLabel={(opt) => opt.email}
+            value={selectedEmail}
+            onChange={(e, v) => {
+              setPage(1);
+              setSelectedEmail(v);
+            }}
+            loading={authorsLoading}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Filter by email"
+                size="small"
+                variant="outlined"
+              />
+            )}
+          />
+        </Box>
+
+        {/* Create Post button for logged-in users */}
+        {user && (
           <Button
             variant="contained"
             size="large"
@@ -53,15 +154,15 @@ export default function Home() {
           >
             + Create Post
           </Button>
-        </Box>
-      )}
+        )}
+      </Box>
 
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           <CircularProgress />
         </Box>
       ) : posts.length > 0 ? (
-        posts.map((post) => <PostCard key={post.id} post={post} hoverable/>)
+        posts.map((post) => <PostCard key={post.id} post={post} hoverable />)
       ) : (
         <Typography align="center" sx={{ mt: 4 }}>
           No posts found.
@@ -69,7 +170,15 @@ export default function Home() {
       )}
 
       {/* Pagination Controls */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4, gap: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mt: 4,
+          gap: 2,
+        }}
+      >
         <Button
           variant="contained"
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
@@ -87,5 +196,5 @@ export default function Home() {
         </Button>
       </Box>
     </Box>
-  )
+  );
 }

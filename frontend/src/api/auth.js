@@ -32,11 +32,18 @@ export async function logoutAPI() {
       Authorization: `Bearer ${access}`,
      },
     body: JSON.stringify({ refresh }),
-    // if your logout endpoint is cookie‑based, add credentials:
-    // credentials: 'include',
   })
 
   if (!resp.ok) {
     throw new Error('Server logout failed')
   }
+}
+
+export async function fetchAuthors() {
+  const resp = await fetch(`${API}/auth/authors/`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  })
+  if (!resp.ok) throw new Error('Failed to fetch authors')
+  return resp.json()
 }
