@@ -8,6 +8,7 @@ import { AuthProvider } from './contexts/AuthContext.jsx'
 
 const theme = createTheme({
   palette: {
+    mode: 'light',
     primary: {
       main: '#1976d2',
     },
@@ -44,7 +45,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <ThemeProvider theme={theme}>
-        <CssBaseline /> 
+        <CssBaseline enableColorScheme/> 
         <App />
       </ThemeProvider>
     </AuthProvider>

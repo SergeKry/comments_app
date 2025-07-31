@@ -45,7 +45,7 @@ export default function PostDetails() {
     async function loadReplies() {
       setRepliesLoading(true)
       try {
-        const data = await fetchReplies({ post: id, ordering: 'created_at' })
+        const data = await fetchReplies({ post: id})
         if (!isMounted) return
         setReplies(data)
       } catch (err) {

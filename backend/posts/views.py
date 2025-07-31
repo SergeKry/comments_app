@@ -33,13 +33,10 @@ class ReplyViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_class = ReplyFilter
-    ordering_fields = ['created_at']
-    ordering = ['created_at']
 
     def get_queryset(self):
         qs = Reply.objects.select_related('user', 'post')\
-                          .prefetch_related('children')\
-                          .order_by('created_at')
+                          .prefetch_related('children')
         if self.action == 'list':
             return qs.filter(parent__isnull=True)
         return qs

@@ -15,7 +15,7 @@ class Post(models.Model):
     def __str__(self):
         return self.title
     
-    
+
 class Reply(models.Model):
     post = models.ForeignKey(
         Post,
@@ -37,6 +37,9 @@ class Reply(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return f'Reply by {self.user.username} on Post {self.post.id}'
