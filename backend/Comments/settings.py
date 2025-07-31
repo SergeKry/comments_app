@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'corsheaders',
+    'channels',
     'users',
     'posts',
     'comments_app',
@@ -173,4 +174,20 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
+}
+
+ASGI_APPLICATION = 'myproject.asgi.application'
+
+CHANNEL_LAYERS = {
+  'default': {
+    'BACKEND': 'channels_redis.core.RedisChannelLayer',
+    'CONFIG': {
+        'hosts': [
+               (
+                   os.getenv('REDIS_HOST', 'redis'),
+                   int(os.getenv('REDIS_PORT', 6379))
+               )
+           ],
+    },
+  }
 }
