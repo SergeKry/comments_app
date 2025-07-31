@@ -19,3 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
         
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'email')
