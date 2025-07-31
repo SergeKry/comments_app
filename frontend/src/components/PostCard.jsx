@@ -71,29 +71,22 @@ export default function PostCard({ post, hoverable = false, preview = false }) {
               <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
                 {post.attachments.map((att, i) => {
                   const url = att.file;
-                  const ext = url.split(".").pop().toLowerCase();
-                  // only apply Lightbox on images
+                  const ext = url.split("?")[0].split(".").pop().toLowerCase();
+                  // if it's an image, render <img>
                   if (["jpg", "jpeg", "png", "gif"].includes(ext)) {
                     return (
-                      <a
+                      <Box
                         key={att.id}
-                        href={url}
-                        data-lightbox={`post-${id}`}
-                        data-title={title}
-                        style={{ display: "inline-block" }}
-                      >
-                        <Box
-                          component="img"
-                          src={url}
-                          alt={title}
-                          sx={{
-                            maxWidth: 100,
-                            maxHeight: 80,
-                            objectFit: "cover",
-                            borderRadius: 1,
-                          }}
-                        />
-                      </a>
+                        component="img"
+                        src={url}
+                        alt={`attachment-${att.id}`}
+                        sx={{
+                          maxWidth: 150,
+                          maxHeight: 120,
+                          objectFit: "cover",
+                          borderRadius: 1,
+                        }}
+                      />
                     );
                   }
                   // render text files as download links
@@ -104,7 +97,7 @@ export default function PostCard({ post, hoverable = false, preview = false }) {
                       download
                       style={{ marginRight: 8, color: "primary.main" }}
                     >
-                      {url.split("/").pop()}
+                      {url.split('/').pop().split('?')[0]}
                     </a>
                   );
                 })}
