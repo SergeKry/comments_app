@@ -4,7 +4,11 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import TextField from '@mui/material/TextField'
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { useAuth } from "../contexts/AuthContext";
 import { fetchPosts } from "../api/posts";
@@ -26,6 +30,8 @@ export default function Home() {
 
   const [selectedAuthor, setSelectedAuthor] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState(null);
+
+  const [sortOrder, setSortOrder] = useState("-created_at");
 
   useEffect(() => {
     let active = true;
@@ -49,7 +55,7 @@ export default function Home() {
     const opts = {
       page,
       page_size: pageSize,
-      ordering: "-created_at",
+      ordering: sortOrder,
       ...(selectedAuthor && { username: selectedAuthor.username }),
       ...(selectedEmail && { email: selectedEmail.email }),
     };
@@ -67,7 +73,7 @@ export default function Home() {
     return () => {
       active = false;
     };
-  }, [page, selectedAuthor, selectedEmail]);
+  }, [page, selectedAuthor, selectedEmail, sortOrder]);
 
   return (
     <Box
@@ -142,6 +148,23 @@ export default function Home() {
               />
             )}
           />
+
+          {/* Sort dropdown */}
+          <FormControl size="small" sx={{ width: 180 }}>
+            <InputLabel id="sort-label">Sort</InputLabel>
+            <Select
+              labelId="sort-label"
+              value={sortOrder}
+              label="Sort"
+              onChange={(e) => {
+                setPage(1);
+                setSortOrder(e.target.value);
+              }}
+            >
+              <MenuItem value="-created_at">New to old</MenuItem>
+              <MenuItem value="created_at">Old to new</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
 
         {/* Create Post button for logged-in users */}
