@@ -9,6 +9,8 @@ import { fetchReplies } from "../api/replies";
 import PostCard from "../components/PostCard";
 import ReplyCard from "../components/ReplyCard";
 
+const WS_URL = import.meta.env.VITE_WS_URL
+
 // Helper function to insert replies in the correct place in the tree
 function mergeReplies(tree, newReply) {
   // If it's a top-level reply, just prepend
