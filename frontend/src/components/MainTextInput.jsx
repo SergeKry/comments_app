@@ -64,7 +64,7 @@ export default function MainTextInput({ value, onChange }) {
         variant="outlined"
         value={value}
         onChange={e => onChange(e.target.value)}
-        placeholder="Enter post content..."
+        placeholder="Enter your text..."
       />
     </Box>
   )

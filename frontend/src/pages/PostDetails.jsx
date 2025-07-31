@@ -5,7 +5,9 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { fetchPost } from '../api/posts'
+import { fetchReplies } from '../api/replies'
 import PostCard from '../components/PostCard'
+import ReplyCard from '../components/ReplyCard'
 
 export default function PostDetails() {
   const { id } = useParams()
@@ -13,6 +15,11 @@ export default function PostDetails() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const [replies, setReplies] = useState([])
+  const [repliesLoading, setRepliesLoading] = useState(true)
+  const [repliesError, setRepliesError] = useState('')
+
+  // Fetch post details
   useEffect(() => {
     let isMounted = true
     async function loadPost() {
@@ -29,6 +36,26 @@ export default function PostDetails() {
       }
     }
     loadPost()
+    return () => { isMounted = false }
+  }, [id])
+
+  // Fetch replies for the post
+  useEffect(() => {
+    let isMounted = true
+    async function loadReplies() {
+      setRepliesLoading(true)
+      try {
+        const data = await fetchReplies({ post: id})
+        if (!isMounted) return
+        setReplies(data)
+      } catch (err) {
+        console.error('Error fetching replies:', err)
+        setRepliesError(err.message || 'Failed to load replies')
+      } finally {
+        if (isMounted) setRepliesLoading(false)
+      }
+    }
+    loadReplies()
     return () => { isMounted = false }
   }, [id])
 
@@ -53,7 +80,7 @@ export default function PostDetails() {
   }
 
   return (
-    <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', width: '100%', height: '100%' }}>
+    <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', width: '90%', height: '100%' }}>
       <Box sx={{ width: '100%', mb: 2, display: 'flex', justifyContent: 'flex-start' }}>
         <Button
           component={RouterLink}
@@ -64,6 +91,24 @@ export default function PostDetails() {
         </Button>
       </Box>
       <PostCard post={post} />
+
+      {/* Replies section */}
+      <Box sx={{ width: '95%', mt: 1 }}>
+       {repliesLoading ? (
+         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+           <CircularProgress size={24} />
+         </Box>
+       ) : repliesError ? (
+         <Typography color="error" sx={{ mt: 1 }}>
+           {repliesError}
+         </Typography>
+       ) : (
+         // render each top-level reply
+         replies.map(reply => (
+           <ReplyCard key={reply.id} reply={reply} />
+         ))
+       )}
+     </Box>
     </Box>
   )
 }
