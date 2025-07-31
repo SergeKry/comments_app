@@ -85,20 +85,26 @@ WSGI_APPLICATION = "Comments.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 import dj_database_url
-DATABASES = {
-  'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-}
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('POSTGRES_DB'),
-#         'USER': os.getenv('POSTGRES_USER'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-#         'HOST': os.getenv('POSTGRES_HOST'),
-#         'PORT': os.getenv('POSTGRES_PORT'),
-#     }
-# }
+if os.getenv('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,      # optional: keep connections open
+        )
+    }
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE':   'django.db.backends.postgresql',
+            'NAME':     os.getenv('POSTGRES_DB',     'postgres'),
+            'USER':     os.getenv('POSTGRES_USER',   'postgres'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+            'HOST':     os.getenv('POSTGRES_HOST',   'db'),
+            'PORT':     os.getenv('POSTGRES_PORT',   '5432'),
+        }
+    }
 
 
 # Password validation
