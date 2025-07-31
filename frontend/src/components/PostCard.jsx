@@ -10,8 +10,11 @@ import Typography from "@mui/material/Typography";
 import DOMPurify from "dompurify";
 import { createReply } from "../api/replies";
 import ReplyDialog from "./ReplyDialog";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function PostCard({ post, hoverable = false, preview = false }) {
+  const { user } = useAuth();
+
   const { id, username, email, created_at, title, text } = post;
   const formattedDate = new Date(created_at).toLocaleString();
   const sanitizedHtml = DOMPurify.sanitize(text);
@@ -66,7 +69,7 @@ export default function PostCard({ post, hoverable = false, preview = false }) {
           </CardContent>
         </CardActionArea>
         {/* Reply button below the card */}
-        {!preview && (
+        {!preview && user && (
           <Box sx={{ p: 1, textAlign: "right" }}>
             <Button size="small" onClick={() => setReplyOpen(true)}>
               Reply
@@ -75,12 +78,14 @@ export default function PostCard({ post, hoverable = false, preview = false }) {
         )}
       </Card>
 
-      <ReplyDialog
-        open={replyOpen}
-        onClose={() => setReplyOpen(false)}
-        onSubmit={(text) => createReply({ post: post.id, text })}
-        parentCard={<PostCard post={post} hoverable={false} preview />}
-      />
+      {user && (
+        <ReplyDialog
+          open={replyOpen}
+          onClose={() => setReplyOpen(false)}
+          onSubmit={(text) => createReply({ post: post.id, text })}
+          parentCard={<PostCard post={post} hoverable={false} preview />}
+        />
+      )}
     </>
   );
 }

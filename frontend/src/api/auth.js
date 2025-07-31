@@ -1,3 +1,5 @@
+import client from './client'
+
 const API = import.meta.env.VITE_API_URL
 
 export async function login({ username, password }) {
@@ -37,6 +39,15 @@ export async function logoutAPI() {
   if (!resp.ok) {
     throw new Error('Server logout failed')
   }
+}
+
+export async function me() {
+  const response = await client(`/auth/me/`)
+  if (!response.ok) {
+    const errText = await response.text()
+    throw new Error(`Failed to check current user: ${errText}`)
+  }
+  return response.json()
 }
 
 export async function fetchAuthors() {
