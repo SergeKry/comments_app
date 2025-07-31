@@ -6,11 +6,13 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { createPost } from '../api/posts'
 import MainTextInput from '../components/MainTextInput'
+import AttachmentsInput from '../components/AttachmentsInput'
 
 export default function CreatePost() {
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [text, setText] = useState('')
+  const [attachments, setAttachments] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -19,7 +21,7 @@ export default function CreatePost() {
     setLoading(true)
     setError('')
     try {
-      await createPost({ title, text })
+      await createPost({ title, text, attachments })
       navigate('/')
     } catch (err) {
       setError(err.message || 'Failed to create post')
@@ -47,8 +49,19 @@ export default function CreatePost() {
         sx={{ mb: 2 }}
       />
       <MainTextInput value={text} onChange={setText} />
+
+      {/* Attachments picker */}
+      <AttachmentsInput
+        files={attachments}
+        setFiles={setAttachments}
+      />
+
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button type="submit" variant="contained" disabled={loading}>
+        <Button 
+          type="submit"
+          variant="contained"
+          disabled={loading || attachments.length > 3}
+        >
           {loading ? 'Submitting...' : 'Submit'}
         </Button>
       </Box>

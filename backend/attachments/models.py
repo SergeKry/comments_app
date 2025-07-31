@@ -32,8 +32,13 @@ class Attachment(models.Model):
         ext = self.file.name.rsplit('.',1)[-1].lower()
         if ext in ('jpg','jpeg','gif','png'):
             img = Image.open(self.file)
+            try:
+                resample = Image.Resampling.LANCZOS
+            except AttributeError:
+                resample = Image.LANCZOS
+
             if img.width > MAX_IMAGE_SIZE[0] or img.height > MAX_IMAGE_SIZE[1]:
-                img.thumbnail(MAX_IMAGE_SIZE, Image.ANTIALIAS)
+                img.thumbnail(MAX_IMAGE_SIZE, resample)
                 buffer = BytesIO()
                 img.save(buffer, format=img.format, quality=85)
                 buffer.seek(0)

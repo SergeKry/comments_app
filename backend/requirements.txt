@@ -24,3 +24,6 @@ uritemplate==4.2.0
 dj-database-url
 whitenoise
 daphne
+django-storages[boto3]
+boto3
+Pillow

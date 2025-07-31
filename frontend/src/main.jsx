@@ -2,9 +2,9 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+import { AuthProvider } from './contexts/AuthContext.jsx'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline     from '@mui/material/CssBaseline'
-import { AuthProvider } from './contexts/AuthContext.jsx'
 
 const theme = createTheme({
   palette: {
