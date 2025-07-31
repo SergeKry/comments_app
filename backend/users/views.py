@@ -1,9 +1,17 @@
+from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, UserSerializer, LogoutSerializer
+from .serializers import (
+    RegisterSerializer,
+    UserSerializer,
+    LogoutSerializer,
+    AuthorSerializer
+)
+
+User = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
@@ -31,3 +39,12 @@ class LogoutView(APIView):
         except Exception as e:
             return Response({'detail': f'Invalid token, {e}'}, status=400)
         return Response({'detail': 'Logout successful'})
+
+
+class AuthorListView(generics.ListAPIView):
+    """
+    Returns all users who have authored at least one Post.
+    """
+    permission_classes = [permissions.AllowAny]
+    serializer_class  = AuthorSerializer
+    queryset = User.objects.filter(posts__isnull=False).distinct()
