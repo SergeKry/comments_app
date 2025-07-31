@@ -88,12 +88,7 @@ export default function PostDetails() {
 
   // WebSocket to receive new replies
   useEffect(() => {
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-    const backendHost = window.location.hostname;
-    const backendPort = 8000;
-    const socket = new WebSocket(
-      `${protocol}://${backendHost}:${backendPort}/ws/posts/${id}/`
-    );
+    const socket = new WebSocket(`${WS_URL}/ws/posts/${id}/`)
 
     socket.onmessage = (e) => {
       const newReply = JSON.parse(e.data);
