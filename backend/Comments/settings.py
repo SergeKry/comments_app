@@ -217,3 +217,6 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },  
 }   
+
+RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_SECRET_KEY')
+ENABLE_RECAPTCHA = bool(os.getenv('ENABLE_RECAPTCHA'))
