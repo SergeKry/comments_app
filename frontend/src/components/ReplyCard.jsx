@@ -9,11 +9,13 @@ import DOMPurify from "dompurify";
 import { createReply } from "../api/replies";
 import ReplyDialog from "./ReplyDialog";
 import { useAuth } from "../contexts/AuthContext";
+import AttachmentsView from "./AttachmentsView";
 
 export default function ReplyCard({ reply, level = 0, preview = false }) {
   const { user } = useAuth();
 
-  const { id, username, email, created_at, text, children } = reply;
+  const { id, username, email, created_at, text, children, attachments } =
+    reply;
   const formattedDate = new Date(created_at).toLocaleString();
   const sanitizedHtml = DOMPurify.sanitize(text);
   const [replyOpen, setReplyOpen] = useState(false);
@@ -36,8 +38,15 @@ export default function ReplyCard({ reply, level = 0, preview = false }) {
               component="div"
               dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
             />
+            {/* —————— attachments —————— */}
+            {attachments?.length > 0 && !preview && (
+              <AttachmentsView
+                attachments={attachments}
+                id={id}
+                title={reply}
+              />
+            )}
           </CardContent>
-
           {/* show reply button only for authenticated users while not in preview */}
           {!preview && user && (
             <Box sx={{ ml: level * 4 + 2, my: 0.5, textAlign: "right" }}>
@@ -59,8 +68,13 @@ export default function ReplyCard({ reply, level = 0, preview = false }) {
         <ReplyDialog
           open={replyOpen}
           onClose={() => setReplyOpen(false)}
-          onSubmit={(text) =>
-            createReply({ post: reply.post, parent: reply.id, text })
+          onSubmit={(text, attachments) =>
+            createReply({
+              post: reply.post,
+              parent: reply.id,
+              text,
+              attachments,
+            })
           }
           parentCard={<ReplyCard reply={reply} preview />}
         />

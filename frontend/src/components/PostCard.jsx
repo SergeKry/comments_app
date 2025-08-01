@@ -11,6 +11,7 @@ import DOMPurify from "dompurify";
 import { createReply } from "../api/replies";
 import ReplyDialog from "./ReplyDialog";
 import { useAuth } from "../contexts/AuthContext";
+import AttachmentsView from "./AttachmentsView";
 
 export default function PostCard({ post, hoverable = false, preview = false }) {
   const { user } = useAuth();
@@ -67,48 +68,12 @@ export default function PostCard({ post, hoverable = false, preview = false }) {
               dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
             />
             {/* —————— attachments —————— */}
-            {post.attachments?.length > 0 && (
-              <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
-                {post.attachments.map((att, i) => {
-                  const url = att.file;
-                  const ext = url.split("?")[0].split(".").pop().toLowerCase();
-                  // only apply Lightbox on images
-                  if (["jpg", "jpeg", "png", "gif"].includes(ext)) {
-                    return (
-                      <a
-                        key={att.id}
-                        href={url}
-                        data-lightbox={`post-${id}`}
-                        data-title={title}
-                        style={{ display: "inline-block" }}
-                      >
-                        <Box
-                          component="img"
-                          src={url}
-                          alt={title}
-                          sx={{
-                            maxWidth: 100,
-                            maxHeight: 80,
-                            objectFit: "cover",
-                            borderRadius: 1,
-                          }}
-                        />
-                      </a>
-                    );
-                  }
-                  // render text files as download links
-                  return (
-                    <a
-                      key={att.id}
-                      href={url}
-                      download
-                      style={{ marginRight: 8, color: "primary.main" }}
-                    >
-                      {url.split("/").pop().split("?")[0]}
-                    </a>
-                  );
-                })}
-              </Box>
+            {post.attachments?.length > 0 && !preview && (
+              <AttachmentsView
+                attachments={post.attachments}
+                id={id}
+                title={title}
+              />
             )}
           </CardContent>
         </CardActionArea>
