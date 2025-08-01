@@ -147,7 +147,7 @@ export default function PostDetails() {
           ← Back
         </Button>
       </Box>
-      <PostCard post={post} />
+      <PostCard post={post} showReply/>
 
       {/* Replies section */}
       <Box sx={{ width: "95%", mt: 1 }}>

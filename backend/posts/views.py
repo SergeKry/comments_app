@@ -1,4 +1,5 @@
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, permissions, filters, parsers
+from rest_framework.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -7,8 +8,26 @@ from .serializers import PostSerializer, ReplySerializer
 from .permissions import IsOwnerOrReadOnly
 from .pagination import PostPagination
 from .filters import PostFilter, ReplyFilter
+from attachments.models import Attachment, MAX_FILES_PER_OBJ
 
-class PostViewSet(viewsets.ModelViewSet):
+
+
+class BaseAttachmentMixin:
+    parser_classes = [
+        parsers.JSONParser,
+        parsers.MultiPartParser,
+        parsers.FormParser
+        ]
+
+    def handle_attachments(self, obj):
+        files = self.request.FILES.getlist('attachments')
+        if len(files) > MAX_FILES_PER_OBJ:
+            raise ValidationError(f'Max {MAX_FILES_PER_OBJ} files allowed')
+        for f in files:
+            Attachment.objects.create(content_object=obj, file=f)
+
+
+class PostViewSet(BaseAttachmentMixin, viewsets.ModelViewSet):
     """
     A viewset for viewing and editing post instances.
     """
@@ -22,10 +41,16 @@ class PostViewSet(viewsets.ModelViewSet):
     ordering = ['-created_at']
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        post = serializer.save(user=self.request.user)
+        self.handle_attachments(post)
+
+    def perform_update(self, serializer):
+        post = serializer.save()
+        if 'attachments' in self.request.FILES:
+            self.handle_attachments(post)
 
 
-class ReplyViewSet(viewsets.ModelViewSet):
+class ReplyViewSet(BaseAttachmentMixin, viewsets.ModelViewSet):
     """
     A viewset for viewing and editing replies. 
     List (GET) only returns top-level replies; children are nested via serializer.
@@ -45,10 +70,15 @@ class ReplyViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         reply = serializer.save(user=self.request.user)
-        # send to WebSocket group
+        self.handle_attachments(reply)
         channel_layer = get_channel_layer()
         data = ReplySerializer(reply, context={'request': self.request}).data
         async_to_sync(channel_layer.group_send)(
         f'post_{reply.post_id}',
         {'type': 'new_reply', 'reply': data}
         )
+
+    def perform_update(self, serializer):
+        reply = serializer.save()
+        if 'attachments' in self.request.FILES:
+            self.handle_attachments(reply)

@@ -191,7 +191,11 @@ export default function Home() {
           <CircularProgress />
         </Box>
       ) : posts.length > 0 ? (
-        posts.map((post) => <PostCard key={post.id} post={post} hoverable />)
+        posts.map((post) => <PostCard 
+        key={post.id} 
+        post={post} 
+        hoverable
+        showOpen />)
       ) : (
         <Typography align="center" sx={{ mt: 4 }}>
           No posts found.

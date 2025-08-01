@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
+from attachments.models import Attachment
 
 class Post(models.Model):
     user = models.ForeignKey(
@@ -11,6 +13,12 @@ class Post(models.Model):
     text = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    attachments = GenericRelation(
+        Attachment,
+        content_type_field='content_type',
+        object_id_field='object_id',
+        related_query_name='post'
+    )
 
     def __str__(self):
         return self.title
@@ -37,6 +45,12 @@ class Reply(models.Model):
     text = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    attachments = GenericRelation(
+        Attachment,
+        content_type_field='content_type',
+        object_id_field='object_id',
+        related_query_name='reply'
+    )
 
     class Meta:
         ordering = ['-created_at']

@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'whitenoise',
+    'storages',
     'channels',
     'users',
     'posts',
+    'attachments',
 ]
 
 MIDDLEWARE = [
@@ -199,3 +201,19 @@ CHANNEL_LAYERS = {
     },
   }
 }
+
+# Storage settings for AWS S3
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": os.getenv("AWS_ACCESS_KEY_ID"),
+            "secret_key": os.getenv("AWS_SECRET_ACCESS_KEY"),
+            "bucket_name": os.getenv("AWS_STORAGE_BUCKET_NAME"),
+            "region_name": os.getenv("AWS_S3_REGION_NAME", "us-east-1"),
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },  
+}   
