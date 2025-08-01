@@ -4,7 +4,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
-from PIL import Image
+from PIL import Image, ImageOps
 
 ALLOWED_EXT = ('jpg','jpeg','gif','png','txt')
 MAX_TXT_BYTES = 100 * 1024
@@ -32,6 +32,7 @@ class Attachment(models.Model):
         ext = self.file.name.rsplit('.',1)[-1].lower()
         if ext in ('jpg','jpeg','gif','png'):
             img = Image.open(self.file)
+            img = ImageOps.exif_transpose(img)
             try:
                 resample = Image.Resampling.LANCZOS
             except AttributeError:
@@ -40,7 +41,10 @@ class Attachment(models.Model):
             if img.width > MAX_IMAGE_SIZE[0] or img.height > MAX_IMAGE_SIZE[1]:
                 img.thumbnail(MAX_IMAGE_SIZE, resample)
                 buffer = BytesIO()
-                img.save(buffer, format=img.format, quality=85)
+                fmt = ext.upper()
+                if fmt in ('JPG', 'JPEG'):
+                    fmt = 'JPEG'
+                img.save(buffer, format=fmt, quality=85)
                 buffer.seek(0)
                 self.file.save(self.file.name,
                                ContentFile(buffer.read()),

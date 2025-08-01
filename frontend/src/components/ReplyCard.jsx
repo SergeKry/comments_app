@@ -43,7 +43,7 @@ export default function ReplyCard({ reply, level = 0, preview = false }) {
               <AttachmentsView
                 attachments={attachments}
                 id={id}
-                title={reply}
+                title="Reply images"  
               />
             )}
           </CardContent>
