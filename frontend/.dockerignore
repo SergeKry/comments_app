@@ -1,0 +1,49 @@
+# ==========================
+# 🔹 Node.js / React (Vite)
+# ==========================
+
+# Node modules (don't copy unnecessary dependencies)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# Build artifacts (only needed for production)
+dist/
+.cache/
+.vite/
+
+# Local environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# Log files
+logs/
+*.log
+yarn-debug.log*
+npm-debug.log*
+
+# System files (Mac & Windows)
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Ignore frontend tests (optional)
+coverage/
+*.test.js
+*.test.ts
+*.test.tsx
+*.spec.js
+*.spec.ts
+*.spec.tsx
+
+# Ignore unnecessary files in Docker builds
+.git/
+.gitignore
+README.md
