@@ -1,6 +1,6 @@
 # comments_app
 
-The app for having a nice conversation by creating posts and sharing your thoughts in replies.
+The app designed to have a nice conversation between users. User can create posts and share their thoughts in replies.
 
 Guest user can:
 - browse posts
@@ -26,7 +26,7 @@ https://comments-app-backend-pl9f.onrender.com/swagger/
 - PostgreSQL as relational database
 - Redis as key-value storage
 
-additional technologies:
+### additional technologies:
 
 - Material UI for styling
 - Websockets to add replies without page reload
@@ -36,7 +36,7 @@ additional technologies:
 
 ## Runing app locally using Docker Compose
 
-The app has docker-compose file that includes all services needed to run the app locally. The only thing which points outside is S3 bucket. You should run all comands from root folder (the same folder where README.md is located)
+The app has docker-compose file that includes all services needed to run the app locally. The only thing which points outside is S3 bucket. You should execute all commands from the root folder (the same folder where README.md is located)
 
 1. create .env file in the root folder. Use env-example as a template.
 Structure should be:
