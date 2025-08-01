@@ -53,3 +53,7 @@ docker-compose.yml
 `your-frontend-host:port`
 API docs are available at 
 `your-backend-host:port/swagger` or `your-backend-host:port/redoc`
+
+## Run tests locally
+1. `cd backend`
+2. run `python -m pytest`
