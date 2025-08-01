@@ -21,7 +21,7 @@ export default function ReplyCard({ reply, level = 0, preview = false }) {
   const [replyOpen, setReplyOpen] = useState(false);
 
   // indent only when not in preview
-  const indent = preview ? 0 : level * 4;
+  const indent = preview ? 0 : level + 2;
 
   return (
     <>
